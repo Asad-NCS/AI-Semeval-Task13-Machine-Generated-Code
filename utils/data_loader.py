@@ -2,7 +2,13 @@ import torch
 from torch.utils.data import DataLoader
 from .preprocess import preprocess_tfidf_pyTorch, preprocess_tokenized, preprocess_codebert
 
-def loadData(mode="tfidf-pytorch", batch_size=32, max_features=5000):
+def loadData(mode="tfidf-pytorch", batch_size=32, max_features=20000):
+    """
+    Load data in different formats:
+    - tfidf-pytorch: classical ML, sparse matrix
+    - tokenization: deep learning models like BiLSTM/TextCNN
+    - codeBert: CodeBERT embeddings
+    """
     if mode == "tfidf-pytorch":
         train_tuple, val_tuple, vectorizer = preprocess_tfidf_pyTorch(
             "data/task_a_training_Set_1.parquet",
@@ -20,8 +26,8 @@ def loadData(mode="tfidf-pytorch", batch_size=32, max_features=5000):
         return train_loader, val_loader
 
     elif mode == "codeBert":
-        train_loader, val_loader = preprocess_codebert(
+        train_dataset, val_dataset = preprocess_codebert(
             "data/task_a_training_Set_1.parquet",
             "data/task_a_validation_set.parquet"
         )
-        return train_loader, val_loader
+        return train_dataset, val_dataset
